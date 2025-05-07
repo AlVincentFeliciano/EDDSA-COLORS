@@ -210,7 +210,7 @@ function showHistory() {
 function renderHistoryGrid(index, signedMessage) {
     const historyColorGrid = document.getElementById(`historyColorGrid${index}`);
     historyColorGrid.innerHTML = '';
-    const gridSize = 5;
+    const gridSize = 15;
     historyColorGrid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
     historyColorGrid.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
     
