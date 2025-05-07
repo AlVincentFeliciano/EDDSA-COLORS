@@ -143,12 +143,14 @@ label {
 
 .historyGrid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 2px;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    gap: 0px;
     margin: 10px 0;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
+    border: 1px solid #eee;
+    overflow: hidden;
 }
 
 .historyItem button {
