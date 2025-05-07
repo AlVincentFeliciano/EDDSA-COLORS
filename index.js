@@ -3,7 +3,7 @@ let videoStream = null; //To store video stream
 
 function generatePattern() {
     const message = document.getElementById('messageInput').value.trim();
-    
+
     if (!message) {
         alert('Please enter a message first');
         return;
@@ -41,7 +41,7 @@ function generatePattern() {
 function verifySignature() {
     const message = document.getElementById('messageInput').value;
     const signedMessageBase64 = document.getElementById('signedMessage').value;
-    
+
     if (!signedMessageBase64) {
         console.error('Verification failed: No signed message to verify');
         alert('No signed message to verify');
@@ -65,7 +65,7 @@ function verifySignature() {
         console.log('Public Key:', nacl.util.encodeBase64(publicKey));
 
         const verifiedMessage = nacl.sign.open(signedMessage, publicKey);
-        
+
         if (verifiedMessage) {
             const decodedMessage = new TextDecoder().decode(verifiedMessage);
             console.log('✓ Verification Successful');
@@ -117,12 +117,12 @@ function importSignedMessage(event) {
     reader.onload = function (e) {
         try {
             const data = JSON.parse(e.target.result);
-            
+
             // Show in imported section
             document.getElementById('importedSection').style.display = 'block';
             document.getElementById('importedMessage').value = data.signedMessage || '';
             document.getElementById('signedMessage').value = ''; //clear signed message
-            
+
             const signedBytes = nacl.util.decodeBase64(data.signedMessage);
             const publicKey = nacl.util.decodeBase64(data.publicKey);
 
@@ -132,7 +132,7 @@ function importSignedMessage(event) {
                 alert('✓ Imported pattern verified!');
                 window.importedPublicKey = publicKey;
                 renderGrid(signedBytes);
-                
+
                 // Add to history
                 patternHistory.push({
                     message: data.message,
@@ -173,7 +173,7 @@ function renderGrid(signedMessage, gridSize = 15) {
 function showHistory() {
     const historyPopup = document.getElementById('historyPopup');
     const overlay = document.getElementById('overlay');
-    
+
     historyPopup.style.display = 'block';
     overlay.style.display = 'block';
 
@@ -187,7 +187,7 @@ function showHistory() {
 
     // Show newest first
     const reversedHistory = [...patternHistory].reverse();
-    
+
     reversedHistory.forEach((item, index) => {
         const originalIndex = patternHistory.length - 1 - index;
         const historyItem = document.createElement('div');
@@ -199,11 +199,16 @@ function showHistory() {
             <div><strong>Signed Message:</strong></div>
             <div class="signed-message">${item.signedMessage}</div>
             <div class="historyGrid" id="historyColorGrid${originalIndex}"></div>
-            <button onclick="loadHistoryPattern(${originalIndex})">Load This Pattern</button>
         `;
 
         historyContent.appendChild(historyItem);
         renderHistoryGrid(originalIndex, item.pattern);
+
+        // Add a click listener to load the pattern when the history item is clicked
+        historyItem.addEventListener('click', () => {
+            loadHistoryPattern(originalIndex);
+        });
+        historyItem.style.cursor = 'pointer'; // Indicate it's clickable
     });
 }
 
@@ -213,12 +218,12 @@ function renderHistoryGrid(index, signedMessage) {
     const gridSize = 15;
     historyColorGrid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
     historyColorGrid.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
-    
+
     for (let i = 0; i < gridSize * gridSize; i++) {
         const r = signedMessage[i % signedMessage.length] || 0;
         const g = signedMessage[(i + 1) % signedMessage.length] || 0;
         const b = signedMessage[(i + 2) % signedMessage.length] || 0;
-        
+
         const box = document.createElement('div');
         box.classList.add('colorBox');
         box.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
